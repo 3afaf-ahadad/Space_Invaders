@@ -115,6 +115,7 @@ function moveInvaders() {
   }
   if (killedInvaders.length === spaceInvaders.length) {
     scoreDisplay.innerHTML = "!YOU WIN!";
+    removeEvents();
     clearInterval(invadersId);
     flashWin();
   }
