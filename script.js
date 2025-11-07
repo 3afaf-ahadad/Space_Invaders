@@ -1,6 +1,8 @@
 const grid = document.querySelector(".grid"); // here I'm creating the grid where all the squares are and where the space invaders'll be moving!
 let scoreDisplay = document.querySelector(".result"); // displaying the score
 
+let shooterIndex = 202;
+
 let isGoingRight = true;
 let direction = 1;
 let invadersId;
@@ -73,3 +75,73 @@ function moveInvaders() {
 }
 
 
+// **********************The shooter***************************
+squares[shooterIndex].classList.add("shoot");
+function moveShooter(e) {
+  squares[shooterIndex].classList.remove("shoot"); // remove the class --> moving the index first --> giving the class again
+  switch (e.key) {
+    case "ArrowLeft":
+      // checking first, if the shooter is at the left edge
+      // every index at the left edge is divided by 15
+      if (shooterIndex % width !== 0) shooterIndex -= 1;
+      break;
+    case "ArrowRight":
+      // checking if the shooter is at the right edge
+      // all the indexes in the right edge % are < then 14 (except the last row)
+      if (shooterIndex % width < width - 1) shooterIndex += 1;
+      break;
+  }
+  squares[shooterIndex].classList.add("shoot");
+}
+
+
+// **********************The shooter***************************
+squares[shooterIndex].classList.add("shoot");
+function moveShooter(e) {
+  squares[shooterIndex].classList.remove("shoot"); // remove the class --> moving the index first --> giving the class again
+  switch (e.key) {
+    case "ArrowLeft":
+      // checking first, if the shooter is at the left edge
+      // every index at the left edge is divided by 15
+      if (shooterIndex % width !== 0) shooterIndex -= 1;
+      break;
+    case "ArrowRight":
+      // checking if the shooter is at the right edge
+      // all the indexes in the right edge % are < then 14 (except the last row)
+      if (shooterIndex % width < width - 1) shooterIndex += 1;
+      break;
+  }
+  squares[shooterIndex].classList.add("shoot");
+}
+
+// *******************Laser shooting💥🔫********************************
+function shootLaser(e) {
+  let laserIndex = shooterIndex; // the laser comes from the div with the shooter index
+  let laserId;
+  function moveLaser() {
+    squares[laserIndex].classList.remove("laser");
+    laserIndex -= width; // -width so the laser goes up
+    if (laserIndex < 0) {
+      // stopping the laser from going off top edge of the grid
+      clearInterval(laserId);
+      return;
+    }
+    squares[laserIndex].classList.add("laser");
+    // when the laser hits invaders
+    if (squares[laserIndex].classList.contains("invader")) {
+      squares[laserIndex].classList.remove("laser");
+      squares[laserIndex].classList.remove("invader");
+      squares[laserIndex].classList.add("explode");
+      setTimeout(() => squares[laserIndex].classList.remove("explode"), 300);
+      clearInterval(laserId);
+      score++;
+      scoreDisplay.innerHTML = score;
+      // removing the shotten invaders
+      const invaderKilled = spaceInvaders.indexOf(laserIndex);
+      killedInvaders.push(invaderKilled);
+    }
+  }
+  if (e.key === "ArrowUp") {
+    laserId = setInterval(moveLaser, 100);
+  }
+}
