@@ -1,13 +1,18 @@
 const grid = document.querySelector(".grid"); // here I'm creating the grid where all the squares are and where the space invaders'll be moving!
 let scoreDisplay = document.querySelector(".result"); // displaying the score
 
+const width = 15; // the width of the grid; a variable I'll use a lot looping, calculating ...
+
 let shooterIndex = 202;
 
 let isGoingRight = true;
 let direction = 1;
 let invadersId;
 
-const width = 15; // the width of the grid; a variable I'll use a lot looping, calculating ...
+// the indexes of the killed space invaders
+const killedInvaders = [];
+let score = 0;
+
 // *******************The Box/Grid******************************
 for (let i = 0; i < width * width; i++) {
   const square = document.createElement("div");
@@ -72,9 +77,23 @@ function moveInvaders() {
     spaceInvaders[i] += direction;
   }
   drawInvaders();
+
+  // modifying in the score display when the game ends
+  // whether it's a win or a game over
+  if (squares[shooterIndex].classList.contains("invader")) {
+    scoreDisplay.innerHTML = "GAME OVER";
+    removeEvents();
+    clearInterval(invadersId);
+    flashGameOver();
+  }
+  if (killedInvaders.length === spaceInvaders.length) {
+    scoreDisplay.innerHTML = "!YOU WIN!";
+    clearInterval(invadersId);
+    flashWin();
+  }
 }
 
-
+invadersId = setInterval(moveInvaders, 600);
 // **********************The shooter***************************
 squares[shooterIndex].classList.add("shoot");
 function moveShooter(e) {
@@ -93,7 +112,6 @@ function moveShooter(e) {
   }
   squares[shooterIndex].classList.add("shoot");
 }
-
 
 // **********************The shooter***************************
 squares[shooterIndex].classList.add("shoot");
@@ -144,4 +162,31 @@ function shootLaser(e) {
   if (e.key === "ArrowUp") {
     laserId = setInterval(moveLaser, 100);
   }
+}
+
+
+
+document.addEventListener("keydown", shootLaser);
+document.addEventListener("keydown", moveShooter);
+
+
+
+// a simple effect when game's over
+function flashGameOver() {
+  let isNotRed = false;
+  setInterval(() => {
+    scoreDisplay.style.color = isNotRed ? "red" : "#333";
+    isNotRed = !isNotRed;
+  }, 300);
+}
+function flashWin() {
+  let notYellow = false;
+  setInterval(() => {
+    scoreDisplay.style.color = notYellow ? "yellow" : "white";
+    notYellow = !notYellow;
+  }, 300);
+}
+function removeEvents() {
+  document.removeEventListener("keydown", shootLaser);
+  document.removeEventListener("keydown", moveShooter);
 }
