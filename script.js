@@ -13,6 +13,33 @@ let invadersId;
 const killedInvaders = [];
 let score = 0;
 
+// **********************"START"***************************
+// an alert box that starts the game
+function startGameAlert() {
+  // creating the elements of the window
+  const start = document.createElement("div");
+  const welcome = document.createElement("h1");
+  const startButton = document.createElement("button");
+  const select = document.createElement("span");
+  const selectCon = document.createElement("div");
+  start.classList.add("start-container");
+  select.classList.add("select");
+  selectCon.classList.add("select-box");
+  document.body.appendChild(start);
+  welcome.innerHTML = "Welcome";
+  startButton.innerHTML = "Start";
+  selectCon.append(startButton, select);
+  start.append(welcome, selectCon);
+  function startGame() {
+    start.style.display = "none";
+    invadersId = setInterval(moveInvaders, 600);
+    document.addEventListener("keydown", shootLaser);
+    document.addEventListener("keydown", moveShooter);
+  }
+  startButton.addEventListener("click", startGame);
+}
+startGameAlert();
+
 // *******************The Box/Grid******************************
 for (let i = 0; i < width * width; i++) {
   const square = document.createElement("div");
@@ -93,7 +120,6 @@ function moveInvaders() {
   }
 }
 
-invadersId = setInterval(moveInvaders, 600);
 // **********************The shooter***************************
 squares[shooterIndex].classList.add("shoot");
 function moveShooter(e) {
@@ -163,12 +189,6 @@ function shootLaser(e) {
     laserId = setInterval(moveLaser, 100);
   }
 }
-
-
-
-document.addEventListener("keydown", shootLaser);
-document.addEventListener("keydown", moveShooter);
-
 
 
 // a simple effect when game's over
