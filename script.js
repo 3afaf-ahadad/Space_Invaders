@@ -1,15 +1,16 @@
 const grid = document.querySelector(".grid"); // here I'm creating the grid where all the squares are and where the space invaders'll be moving!
 let scoreDisplay = document.querySelector(".result"); // displaying the score
 
+let isGoingRight = true;
+let direction = 1;
+let invadersId;
 
- 
 const width = 15; // the width of the grid; a variable I'll use a lot looping, calculating ...
 // *******************The Box/Grid******************************
 for (let i = 0; i < width * width; i++) {
   const square = document.createElement("div");
   grid.appendChild(square);
 } // created squares in the grid 15 x 15 ==> 225 squares by total
-
 
 // **********************"Space Invaders👾"***************************
 
@@ -34,4 +35,41 @@ function drawInvaders() {
   }
 }
 drawInvaders();
+
+function removeInvaders() {
+  for (let i = 0; i < spaceInvaders.length; i++) {
+    squares[spaceInvaders[i]].classList.remove("invader");
+  }
+}
+
+function moveInvaders() {
+  //remove the class 'invader' from each div in the 'spaceInvaders' array --> move all indexes by 1 --> return the class 'invader'
+  const leftEdge = spaceInvaders[0] % width === 0;
+  const rightEdge =
+    spaceInvaders[spaceInvaders.length - 1] % width === width - 1;
+  removeInvaders();
+  //    I check wether "spaceInvaders" are on the right/left edge
+  // Using the 2 variables of "right/leftEdge" and "isGoingRight"
+  if (rightEdge && isGoingRight) {
+    for (let i = 0; i < spaceInvaders.length; i++) {
+      spaceInvaders[i] += width + 1;
+      direction = -1;
+      isGoingRight = false;
+    }
+  }
+  // If the "spaceInvaders" hit the right/left edge they go downward and
+  //    turn the direction and keep moving the other way to make their known "zigzag" movements in the original game
+  if (leftEdge && !isGoingRight) {
+    for (let i = 0; i < spaceInvaders.length; i++) {
+      spaceInvaders[i] += width - 1;
+      direction = 1;
+      isGoingRight = true;
+    }
+  }
+  for (let i = 0; i < spaceInvaders.length; i++) {
+    spaceInvaders[i] += direction;
+  }
+  drawInvaders();
+}
+
 
